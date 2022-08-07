@@ -5,6 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.http import Http404
+from rest_framework import generics
 # Create your views here.
 
 
@@ -58,7 +59,7 @@ class PostComment(APIView):
         serializer = CommentSerializer(comments, many=True)
         return Response(serializer.data)
 
-    def
+
 
     def post(self, request, format=None):
         serializer = CommentSerializer(data=request.data)
@@ -95,3 +96,20 @@ class CommentDetail(APIView):
         comment = self.get_object(pk)
         post.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+class Comments(generics.ListAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+
+    def get_queryset(self):
+        pk = self.kwargs['pk']
+        return Comment.objects.filter(post=pk)
+
+class CreateComment(generics.CreateAPIView):
+    serializer_class = CommentSerializer
+    def perform_create(self, serializer):
+        pk = self.kwargs.get('pk')
+        post = Post.objects.get(pk=pk)
+        serializer.save(post=post)
