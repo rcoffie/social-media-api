@@ -10,3 +10,10 @@ class Post(models.Model):
 
     def __str__(self):
         return self.author.username
+
+
+class Comment(models.Model):
+    comment = models.TextField()
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    created_on = models.DateTimeField(default=timezone.now)
