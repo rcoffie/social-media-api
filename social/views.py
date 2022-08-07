@@ -60,6 +60,7 @@ class PostComment(APIView):
         return Response(serializer.data)
 
 
+
     def post(self, request, format=None):
         serializer = CommentSerializer(data=request.data)
         if serializer.is_valid():
@@ -79,7 +80,7 @@ class CommentDetail(APIView):
 
 
     def get(self, request, pk , format=None):
-        post = self.get_object(pk)
+        comment = self.get_object(pk)
         serializer = CommentSerializer(post)
         return Respnose(serializer.data)
 
