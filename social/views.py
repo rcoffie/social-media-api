@@ -6,10 +6,13 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.http import Http404
 from rest_framework import generics
+from rest_framework.permissions import IsAuthenticated
+from social.permissions import IsOwnerOrReadOnly
 # Create your views here.
 
 
 class PostList(APIView):
+    permission_classes = [IsAuthenticated]
     def get(self, request, format=None):
         posts = Post.objects.all()
         serializer = PostSerializer(posts, many=True )
@@ -25,6 +28,8 @@ class PostList(APIView):
 
 
 class PostDetail(APIView):
+    permission_classes = [IsAuthenticated & IsOwnerOrReadOnly ]
+
 
     def get_object(self, pk):
         try:
@@ -55,6 +60,7 @@ class PostDetail(APIView):
 
 
 class Comments(generics.ListAPIView):
+    permissions = [IsAuthenticated]
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
 
@@ -63,6 +69,7 @@ class Comments(generics.ListAPIView):
         return Comment.objects.filter(post=pk)
 
 class CreateComment(generics.CreateAPIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = CommentSerializer
     def perform_create(self, serializer):
         pk = self.kwargs.get('pk')
@@ -71,5 +78,6 @@ class CreateComment(generics.CreateAPIView):
 
 
 class UpdateComment(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated & IsOwnerOrReadOnly ]
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
