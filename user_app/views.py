@@ -13,10 +13,6 @@ from django.contrib.auth import logout
 # Create your views here.
 
 
-class UserCreate(generics.CreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    permission_classes = [AllowAny]
 
 
 class UserRegistration(APIView):
