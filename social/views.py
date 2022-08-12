@@ -73,8 +73,24 @@ class CreateComment(generics.CreateAPIView):
     serializer_class = CommentSerializer
     def perform_create(self, serializer):
         pk = self.kwargs.get('pk')
+        print("pk")
         post = Post.objects.get(pk=pk)
-        serializer.save(post=post)
+        print(post)
+        serializer.save(author=self.request.user, post=self.post)
+    # def perform_create(self, serializer):
+    #     pk = self.kwargs.get('pk')
+    #     post = Post.objects.get(pk=pk)
+    #     serializer.save(post=post,author=self.request.user)
+
+
+
+class postcomment(generics.CreateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = CommentSerializer
+    def perform_create(self, serializer):
+        pk = self.kwargs.get("pk")
+        post = Post.objects.get(pk=pk)
+        serializer.save(post=post, author=self.request.user)
 
 
 class UpdateComment(generics.RetrieveUpdateDestroyAPIView):

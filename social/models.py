@@ -8,8 +8,7 @@ class Post(models.Model):
     created_on = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    def __str__(self):
-        return self.author.username
+    
 
 
 class Comment(models.Model):
