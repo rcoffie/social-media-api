@@ -12,7 +12,7 @@ from social.permissions import IsOwnerOrReadOnly
 
 
 class PostList(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated  ]
     def get(self, request, format=None):
         posts = Post.objects.all()
         serializer = PostSerializer(posts, many=True )
@@ -60,7 +60,7 @@ class PostDetail(APIView):
 
 
 class Comments(generics.ListAPIView):
-    permissions = [IsAuthenticated]
+    permissions = [IsAuthenticated ]
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
 
