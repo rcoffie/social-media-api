@@ -2,16 +2,27 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework.authtoken.views import Token
 from rest_framework.validators import UniqueValidator
+from user_app .models import Profile
+
+posts = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = ('id','first_name','second_name','location')
+
 
 
 class UserSerializer(serializers.ModelSerializer):
+
+    profile = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 
     password = serializers.CharField(style={'input_type': 'password'}, write_only=True)
     password2 = serializers.CharField(style={'input_type':'password'}, write_only=True)
     email = serializers.EmailField()
     class Meta:
         model = User
-        fields = ("username", "password","password2","email")
+        fields = ("username", "password","password2","email","profile")
         extra_kwargs = {
         "password": {"write_only": True},
         "password2" : {"write_only": True}
@@ -29,5 +40,7 @@ class UserSerializer(serializers.ModelSerializer):
         user = User(**validated_data)
         user.set_password(password)
         user.save()
+
+
         Token.objects.create(user=user)
         return user
